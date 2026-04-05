@@ -159,7 +159,7 @@ export default function AlgoInfoPanel({ algorithm }) {
           <p className="text-xs mt-0.5 truncate" style={{ color: '#5A7A9A' }}>{info.tagline}</p>
         </div>
 
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="hidden sm:flex items-center gap-3 shrink-0">
           <span className="text-xs font-mono font-semibold" style={{ color: '#E6A23C' }}>⏱ {info.complexity.average}</span>
           <span className="text-xs font-mono font-semibold" style={{ color: '#4F8CFF' }}>💾 {info.complexity.space}</span>
         </div>
@@ -183,10 +183,10 @@ export default function AlgoInfoPanel({ algorithm }) {
             <div className="overflow-y-auto" style={{ maxHeight: 400 }}>
               <div className="p-5 space-y-5">
 
-                {/* Diagram + description */}
-                <div className="flex gap-5">
+                {/* Diagram + description — stacks on mobile */}
+                <div className="flex flex-col sm:flex-row gap-4">
                   <div className="shrink-0 rounded-xl p-3 flex items-center justify-center"
-                    style={{ background: '#0D1117', border: '1px solid #1A2535', width: 230 }}>
+                    style={{ background: '#0D1117', border: '1px solid #1A2535', width: '100%', maxWidth: 230 }}>
                     {Diagram && <Diagram color={info.color} />}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -214,12 +214,12 @@ export default function AlgoInfoPanel({ algorithm }) {
                   </div>
                 </div>
 
-                {/* Complexity */}
+                {/* Complexity — 2 cols on mobile, 4 on sm+ */}
                 <div>
                   <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#3A5070' }}>
                     Time & Space Complexity
                   </p>
-                  <div className="grid grid-cols-4 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     <Badge label="Best"    value={info.complexity.best}    color="#5BCB8A" />
                     <Badge label="Average" value={info.complexity.average} color="#E6A23C" />
                     <Badge label="Worst"   value={info.complexity.worst}   color="#E85D5D" />

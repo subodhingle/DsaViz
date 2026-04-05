@@ -29,25 +29,25 @@ const CATEGORIES = [
   },
 ]
 
-export default function Sidebar() {
+export default function Sidebar({ onSelect }) {
   const { category, algorithm, setCategory, setAlgorithm } = useStore()
 
   return (
     <aside
-      className="w-52 shrink-0 flex flex-col overflow-y-auto pt-12"
+      className="w-52 h-full flex flex-col overflow-y-auto"
       style={{
         background: 'var(--surface)',
         borderRight: '1px solid var(--border-subtle)',
       }}
     >
-      {/* Section label */}
       <div className="px-4 pt-5 pb-2">
-        <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-disabled)' }}>
+        <span className="text-[10px] font-semibold uppercase tracking-widest"
+          style={{ color: 'var(--text-disabled)' }}>
           Algorithms
         </span>
       </div>
 
-      <nav className="flex-1 px-2 pb-4 space-y-0.5">
+      <nav className="flex-1 px-2 pb-6 space-y-0.5">
         {CATEGORIES.map(cat => {
           const isActive = category === cat.id
           return (
@@ -57,19 +57,12 @@ export default function Sidebar() {
                   setCategory(cat.id)
                   const first = cat.algos[0]?.split(':')[0]
                   if (first) setAlgorithm(first)
+                  onSelect?.()
                 }}
                 className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150"
-                style={
-                  isActive
-                    ? {
-                        background: 'var(--accent-subtle)',
-                        color: 'var(--accent)',
-                        border: '1px solid var(--accent-border)',
-                      }
-                    : {
-                        color: 'var(--text-secondary)',
-                        border: '1px solid transparent',
-                      }
+                style={isActive
+                  ? { background: 'var(--accent-subtle)', color: 'var(--accent)', border: '1px solid var(--accent-border)' }
+                  : { color: 'var(--text-secondary)', border: '1px solid transparent' }
                 }
                 onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = 'var(--hover-bg)' }}
                 onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = 'transparent' }}
@@ -93,14 +86,12 @@ export default function Sidebar() {
                         const [id, label] = raw.split(':')
                         const isAlgoActive = algorithm === id
                         return (
-                          <button
-                            key={id}
-                            onClick={() => setAlgorithm(id)}
+                          <button key={id}
+                            onClick={() => { setAlgorithm(id); onSelect?.() }}
                             className="w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-all duration-100"
-                            style={
-                              isAlgoActive
-                                ? { color: 'var(--accent)', background: 'var(--accent-subtle)', fontWeight: 600 }
-                                : { color: 'var(--text-muted)' }
+                            style={isAlgoActive
+                              ? { color: 'var(--accent)', background: 'var(--accent-subtle)', fontWeight: 600 }
+                              : { color: 'var(--text-muted)' }
                             }
                             onMouseEnter={e => { if (!isAlgoActive) e.currentTarget.style.color = 'var(--text-primary)' }}
                             onMouseLeave={e => { if (!isAlgoActive) e.currentTarget.style.color = 'var(--text-muted)' }}

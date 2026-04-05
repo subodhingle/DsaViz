@@ -1,6 +1,5 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { motion } from 'framer-motion'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import VisualizerArea from './components/VisualizerArea'
@@ -24,7 +23,8 @@ function VisualizerApp() {
     graphSource, graphTarget,
   } = useStore()
 
-  // Apply theme class to body
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
   useEffect(() => {
     document.body.className = theme === 'glass' ? 'theme-glass' : theme === 'military' ? 'theme-military' : ''
   }, [theme])
@@ -36,8 +36,6 @@ function VisualizerApp() {
       setSearchTarget(arr[Math.floor(Math.random() * arr.length)])
     } else if (category === 'graph') {
       setGraphData(generateGraph(8))
-    } else if (category === 'tree') {
-      // tree data is generated on run
     }
     setSteps([])
   }
@@ -45,7 +43,6 @@ function VisualizerApp() {
   const handleRun = () => {
     setIsPlaying(false)
     let steps = []
-
     if (category === 'sorting') {
       const runners = { bubble: bubbleSort, merge: mergeSort, quick: quickSort, heap: heapSort }
       steps = (runners[algorithm] || bubbleSort)(array.length ? array : generateArray())
@@ -65,35 +62,44 @@ function VisualizerApp() {
       const vals = generateBSTValues(10)
       if (algorithm === 'bst-insert') steps = bstInsert(vals)
       else if (algorithm === 'bst-delete') steps = bstDelete(vals, vals[Math.floor(vals.length / 2)])
-      else {
-        const traversalType = algorithm.replace('bst-', '')
-        steps = bstTraversal(vals, traversalType)
-      }
+      else steps = bstTraversal(vals, algorithm.replace('bst-', ''))
     }
-
     setSteps(steps)
     setTimeout(() => setIsPlaying(true), 100)
   }
 
-  // Auto-generate on mount and category change
-  useEffect(() => {
-    handleGenerate()
-  }, [category])
+  useEffect(() => { handleGenerate() }, [category])
 
   return (
     <div className="h-screen flex flex-col overflow-hidden" style={{ background: 'var(--canvas)' }}>
-      <Navbar />
+      <Navbar onMenuClick={() => setSidebarOpen(v => !v)} sidebarOpen={sidebarOpen} />
+
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
 
       <div className="flex flex-1 overflow-hidden pt-12">
-        <Sidebar />
+        {/* Sidebar — drawer on mobile, fixed on desktop */}
+        <div
+          className={`
+            fixed lg:relative z-40 lg:z-auto
+            top-12 lg:top-0 bottom-0 left-0
+            transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
+            ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          `}
+        >
+          <Sidebar onSelect={() => setSidebarOpen(false)} />
+        </div>
 
-        <main className="flex-1 flex flex-col overflow-hidden" style={{ background: 'var(--canvas)' }}>
+        <main className="flex-1 flex flex-col overflow-hidden min-w-0">
           <StatsPanel />
-
-          <div className="flex-1 overflow-hidden relative">
+          <div className="flex-1 overflow-hidden">
             <VisualizerArea />
           </div>
-
           <Controls onGenerate={handleGenerate} onRun={handleRun} />
         </main>
       </div>
@@ -105,7 +111,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/"    element={<LandingPage />} />
         <Route path="/app" element={<VisualizerApp />} />
       </Routes>
     </BrowserRouter>

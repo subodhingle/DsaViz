@@ -389,23 +389,21 @@ function ThemesSection({ themes, activeTheme, setActiveTheme }) {
                   Running
                 </div>
               </div>
-              {/* Fake app */}
-              <div className="flex" style={{ height: 200 }}>
-                {/* Sidebar */}
-                <div className="w-32 shrink-0 p-3 space-y-1.5" style={{ borderRight: `1px solid ${t.border}` }}>
+              {/* Fake app — hide sidebar on small screens */}
+              <div className="flex" style={{ minHeight: 160 }}>
+                {/* Sidebar — hidden on xs */}
+                <div className="hidden sm:block w-28 shrink-0 p-3 space-y-1.5"
+                  style={{ borderRight: `1px solid ${t.border}` }}>
                   {['Sorting','Searching','Graph','Tree','Custom'].map((item, i) => (
-                    <div key={item} className="px-2.5 py-1.5 rounded-lg text-xs font-medium"
-                      style={{
-                        background: i === 0 ? t.accent : `${t.accent}10`,
-                        color: i === 0 ? '#fff' : t.accent,
-                      }}>
+                    <div key={item} className="px-2 py-1.5 rounded-lg text-xs font-medium"
+                      style={{ background: i === 0 ? t.accent : `${t.accent}10`, color: i === 0 ? '#fff' : t.accent }}>
                       {item}
                     </div>
                   ))}
                 </div>
                 {/* Chart */}
-                <div className="flex-1 p-4 flex flex-col gap-3">
-                  <div className="flex-1 relative">
+                <div className="flex-1 p-3 sm:p-4 flex flex-col gap-3">
+                  <div className="flex-1 relative" style={{ minHeight: 80 }}>
                     <div className="absolute inset-0 flex items-end gap-1 pb-1">
                       {PREVIEW_BARS.map((h, i) => (
                         <div key={i} className="flex-1 rounded-t-sm"
@@ -422,8 +420,8 @@ function ThemesSection({ themes, activeTheme, setActiveTheme }) {
                     </div>
                     <div className="absolute bottom-1 inset-x-0 h-px" style={{ background: `${t.accent}20` }} />
                   </div>
-                  <div className="flex gap-2 shrink-0">
-                    {['Comparisons: 24', 'Swaps: 11', 'O(n²)'].map(s => (
+                  <div className="flex flex-wrap gap-1.5 shrink-0">
+                    {['Cmp: 24', 'Swp: 11', 'O(n²)'].map(s => (
                       <span key={s} className="text-[10px] px-2 py-1 rounded font-mono"
                         style={{ background: `${t.accent}12`, color: t.accent, border: `1px solid ${t.accent}20` }}>
                         {s}
@@ -451,7 +449,7 @@ function CTASection({ navigate }) {
         className="max-w-2xl mx-auto text-center"
       >
         <div
-          className="rounded-2xl p-12 relative overflow-hidden"
+          className="rounded-2xl p-6 sm:p-12 relative overflow-hidden"
           style={{
             background: 'var(--elevated)',
             border: '1px solid var(--border-default)',

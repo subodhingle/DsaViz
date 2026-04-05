@@ -51,18 +51,33 @@ export function generateBSTValues(count = 10) {
   return [...vals]
 }
 
-export const defaultUserCode = `// Write your algorithm using:
-// compare(i, j) → returns true if arr[i] > arr[j]
-// swap(i, j)    → swaps arr[i] and arr[j]
-// mark(i)       → marks index i as sorted
-// set(name, val)→ sets a variable
-// n             → array length
+export const defaultUserCode = `// ── Custom Algorithm Builder ──────────────────────
+// Available API:
+//   compare(i, j)  → true if arr[i] > arr[j]  [amber]
+//   swap(i, j)     → swaps arr[i] ↔ arr[j]    [red]
+//   set(i, value)  → sets arr[i] = value       [blue]
+//   highlight(i)   → highlights index i        [blue]
+//   mark(i)        → marks i as sorted         [green]
+//   markAll()      → marks all as done         [green]
+//   pivot(i)       → marks i as pivot          [violet]
+//   log(msg)       → prints to execution log
+//   setVar(k, v)   → tracks variable in panel
+//   n              → array length
+//   arr            → copy of current array
+// ──────────────────────────────────────────────────
+
+// Bubble Sort — edit this or write your own!
+log("Starting Bubble Sort on " + n + " elements");
 
 for (let i = 0; i < n - 1; i++) {
+  setVar("pass", i + 1);
   for (let j = 0; j < n - 1 - i; j++) {
+    setVar("j", j);
     if (compare(j, j + 1)) {
       swap(j, j + 1);
     }
   }
   mark(n - 1 - i);
-}`
+}
+mark(0);
+log("Done!");`

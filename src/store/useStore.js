@@ -57,6 +57,20 @@ const useStore = create((set, get) => ({
   userSteps: [],
   setUserSteps: (userSteps) => set({ userSteps }),
 
+  // Breakpoints — set of 0-based line numbers
+  breakpoints: new Set(),
+  toggleBreakpoint: (line) => set(s => {
+    const bp = new Set(s.breakpoints)
+    bp.has(line) ? bp.delete(line) : bp.add(line)
+    return { breakpoints: bp }
+  }),
+  clearBreakpoints: () => set({ breakpoints: new Set() }),
+
+  // Execution log
+  execLog: [],
+  appendLog: (entry) => set(s => ({ execLog: [...s.execLog.slice(-199), entry] })),
+  clearLog: () => set({ execLog: [] }),
+
   // Stats
   comparisons: 0,
   swaps: 0,

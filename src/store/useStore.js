@@ -92,6 +92,8 @@ const defaultAlgo = {
   searching: 'linear',
   graph: 'bfs',
   tree: 'bst-insert',
+  custom: 'custom',
+  compiler: 'compiler',
 }
 
 export default useStore

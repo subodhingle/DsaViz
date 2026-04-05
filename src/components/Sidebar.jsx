@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { BarChart2, Search, GitBranch, Binary, Wand2 } from 'lucide-react'
+import { BarChart2, Search, GitBranch, Binary, Wand2, Code } from 'lucide-react'
 import useStore from '../store/useStore'
 
 const CATEGORIES = [
@@ -21,6 +21,10 @@ const CATEGORIES = [
   },
   {
     id: 'custom', label: 'Custom Builder', icon: Wand2,
+    algos: [],
+  },
+  {
+    id: 'compiler', label: 'Code Editor', icon: Code,
     algos: [],
   },
 ]

@@ -9,6 +9,7 @@ import LogicPanel          from './LogicPanel'
 import AlgorithmBuilder    from './AlgorithmBuilder'
 import CustomStatePanel    from './CustomStatePanel'
 import AlgoInfoPanel       from './AlgoInfoPanel'
+import CodeEditor          from './CodeEditor'
 
 const VIS_MAP = {
   sorting:   SortingVisualizer,
@@ -19,6 +20,15 @@ const VIS_MAP = {
 
 export default function VisualizerArea() {
   const { category, view, algorithm } = useStore()
+
+  // ── Compiler / Code Editor ───────────────────────────────────────────────
+  if (category === 'compiler') {
+    return (
+      <div className="w-full h-full overflow-hidden">
+        <CodeEditor />
+      </div>
+    )
+  }
 
   // ── Custom Builder ────────────────────────────────────────────────────────
   if (category === 'custom') {

@@ -265,4 +265,93 @@ export const algoInfo = {
     color: '#A78BFA',
     diagram: 'tree',
   },
+
+  // ── ADVANCED SORTING ─────────────────────────────────────────────────────
+
+  'counting-sort': {
+    name: 'Counting Sort', category: 'Advanced Sorting', tagline: 'Count occurrences, then reconstruct — no comparisons needed.',
+    description: 'Counting Sort works by counting the number of occurrences of each distinct element. It then uses these counts to place each element directly into its correct position. It runs in O(n+k) time where k is the range of input values, making it faster than comparison-based sorts for small integer ranges.',
+    complexity: { best: 'O(n+k)', average: 'O(n+k)', worst: 'O(n+k)', space: 'O(k)' },
+    stable: true, inPlace: false, type: 'Non-Comparison Sort',
+    useCases: ['Integer arrays with small range', 'Radix sort subroutine', 'Counting frequencies'],
+    pros: ['O(n+k) — faster than O(n log n) for small k', 'Stable sort', 'Simple implementation'],
+    cons: ['Only works for integers/discrete values', 'O(k) space — bad for large ranges', 'Not in-place'],
+    color: '#4F8CFF', diagram: 'sorting',
+  },
+  'shell-sort': {
+    name: 'Shell Sort', category: 'Advanced Sorting', tagline: 'Generalized insertion sort using decreasing gap sequences.',
+    description: 'Shell Sort improves on Insertion Sort by comparing elements separated by a gap. The gap starts large and shrinks each pass. This moves elements closer to their final position quickly, making the final insertion sort pass nearly O(n). Performance depends heavily on the gap sequence chosen.',
+    complexity: { best: 'O(n log n)', average: 'O(n log² n)', worst: 'O(n²)', space: 'O(1)' },
+    stable: false, inPlace: true, type: 'Comparison Sort',
+    useCases: ['Medium-sized arrays', 'Embedded systems', 'When in-place is required but O(n²) is too slow'],
+    pros: ['In-place — O(1) space', 'Better than insertion sort in practice', 'Simple to implement'],
+    cons: ['Not stable', 'Complex time analysis', 'Worse than merge/quick for large inputs'],
+    color: '#A78BFA', diagram: 'sorting',
+  },
+  'radix-sort': {
+    name: 'Radix Sort', category: 'Advanced Sorting', tagline: 'Sort digit by digit from least to most significant.',
+    description: 'Radix Sort processes integers digit by digit using a stable subroutine (like Counting Sort) at each digit position. Starting from the least significant digit (LSD), it sorts the array d times where d is the number of digits. This achieves O(d·n) time — linear for fixed-width integers.',
+    complexity: { best: 'O(d·n)', average: 'O(d·n)', worst: 'O(d·n)', space: 'O(n+k)' },
+    stable: true, inPlace: false, type: 'Non-Comparison Sort',
+    useCases: ['Fixed-width integers', 'Strings of equal length', 'When O(n log n) is too slow'],
+    pros: ['Linear time for fixed-width integers', 'Stable sort', 'Predictable performance'],
+    cons: ['Only works for integers/strings', 'O(n+k) extra space', 'Slower for variable-length data'],
+    color: '#E6A23C', diagram: 'sorting',
+  },
+
+  // ── DATA STRUCTURES ───────────────────────────────────────────────────────
+
+  'stack-ops': {
+    name: 'Stack', category: 'Data Structures', tagline: 'LIFO — Last In, First Out. Push and pop from the top.',
+    description: 'A Stack is a linear data structure following LIFO order. Elements are added (pushed) and removed (popped) from the same end called the top. It is used for function call management, undo operations, expression evaluation, and backtracking algorithms.',
+    complexity: { best: 'O(1)', average: 'O(1)', worst: 'O(1)', space: 'O(n)' },
+    stable: true, inPlace: true, type: 'Linear Data Structure',
+    useCases: ['Function call stack', 'Undo/redo operations', 'Expression parsing', 'DFS implementation', 'Backtracking'],
+    pros: ['O(1) push and pop', 'Simple implementation', 'Memory efficient'],
+    cons: ['No random access', 'Fixed size in array implementation', 'Stack overflow risk'],
+    color: '#5BCB8A', diagram: 'sorting',
+  },
+  'queue-ops': {
+    name: 'Queue', category: 'Data Structures', tagline: 'FIFO — First In, First Out. Enqueue at rear, dequeue from front.',
+    description: 'A Queue is a linear data structure following FIFO order. Elements are added (enqueued) at the rear and removed (dequeued) from the front. It is used for BFS, task scheduling, print spooling, and any scenario requiring ordered processing.',
+    complexity: { best: 'O(1)', average: 'O(1)', worst: 'O(1)', space: 'O(n)' },
+    stable: true, inPlace: true, type: 'Linear Data Structure',
+    useCases: ['BFS traversal', 'Task scheduling', 'Print spooling', 'Breadth-first processing', 'Message queues'],
+    pros: ['O(1) enqueue and dequeue', 'Fair ordering (FIFO)', 'Simple implementation'],
+    cons: ['No random access', 'Fixed size in array implementation', 'Wasted space in circular buffer'],
+    color: '#C8873A', diagram: 'sorting',
+  },
+
+  // ── TECHNIQUES ────────────────────────────────────────────────────────────
+
+  'sliding-window': {
+    name: 'Sliding Window', category: 'Techniques', tagline: 'Maintain a window of fixed/variable size sliding through the array.',
+    description: 'The Sliding Window technique maintains a subset (window) of elements and slides it across the array. Instead of recomputing the window from scratch each time, it adds the new element and removes the old one in O(1). This reduces O(n²) brute force to O(n) for many subarray problems.',
+    complexity: { best: 'O(n)', average: 'O(n)', worst: 'O(n)', space: 'O(1)' },
+    stable: true, inPlace: true, type: 'Array Technique',
+    useCases: ['Maximum sum subarray of size k', 'Longest substring without repeating chars', 'Minimum window substring', 'Average of subarrays'],
+    pros: ['O(n) — linear time', 'O(1) space', 'Elegant and simple'],
+    cons: ['Only works for contiguous subarrays', 'Requires careful window management'],
+    color: '#4F8CFF', diagram: 'searching',
+  },
+  'two-pointers': {
+    name: 'Two Pointers', category: 'Techniques', tagline: 'Use two indices moving toward each other to solve pair problems in O(n).',
+    description: 'The Two Pointers technique uses two indices (left and right) that move toward each other on a sorted array. By comparing the sum of elements at both pointers to a target, we can efficiently find pairs, triplets, or subarrays satisfying a condition — reducing O(n²) brute force to O(n).',
+    complexity: { best: 'O(n log n)', average: 'O(n log n)', worst: 'O(n log n)', space: 'O(1)' },
+    stable: true, inPlace: true, type: 'Array Technique',
+    useCases: ['Pair sum equals target', 'Three sum problem', 'Container with most water', 'Palindrome check', 'Remove duplicates'],
+    pros: ['O(n) after sorting', 'O(1) extra space', 'Intuitive and clean'],
+    cons: ['Requires sorted array for most problems', 'Not applicable to all problems'],
+    color: '#E85D5D', diagram: 'searching',
+  },
+  'knapsack': {
+    name: '0/1 Knapsack DP', category: 'Dynamic Programming', tagline: 'Maximize value within weight capacity using a 2D DP table.',
+    description: 'The 0/1 Knapsack problem asks: given items with weights and values, and a knapsack of capacity W, what is the maximum value we can carry? Each item can be taken (1) or left (0). The DP solution builds a table dp[i][w] = max value using first i items with capacity w, achieving O(n·W) time.',
+    complexity: { best: 'O(n·W)', average: 'O(n·W)', worst: 'O(n·W)', space: 'O(n·W)' },
+    stable: true, inPlace: false, type: 'Dynamic Programming',
+    useCases: ['Resource allocation', 'Portfolio optimization', 'Subset sum', 'Budget planning', 'Interview problems'],
+    pros: ['Optimal solution guaranteed', 'Builds intuition for DP', 'Widely applicable pattern'],
+    cons: ['O(n·W) space — pseudo-polynomial', 'Not suitable for fractional items', 'Large W makes it slow'],
+    color: '#9B6FD4', diagram: 'sorting',
+  },
 }

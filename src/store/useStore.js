@@ -88,12 +88,15 @@ const useStore = create((set, get) => ({
 }))
 
 const defaultAlgo = {
-  sorting: 'bubble',
-  searching: 'linear',
-  graph: 'bfs',
-  tree: 'bst-insert',
-  custom: 'custom',
-  compiler: 'compiler',
+  sorting:          'bubble',
+  'advanced-sorting': 'counting-sort',
+  searching:        'linear',
+  graph:            'bfs',
+  tree:             'bst-insert',
+  ds:               'stack-ops',
+  techniques:       'sliding-window',
+  custom:           'custom',
+  compiler:         'compiler',
 }
 
 export default useStore

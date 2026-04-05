@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import VisualizerArea from './components/VisualizerArea'
@@ -108,6 +109,7 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/app" element={<VisualizerApp />} />
       </Routes>
+      <SpeedInsights />
     </BrowserRouter>
   )
 }

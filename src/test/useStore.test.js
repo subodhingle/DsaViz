@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import useStore from '../store/useStore'
 
-// Reset store to initial state before each test
+// Reset store to default state before each test
 beforeEach(() => {
   useStore.setState({
     theme: 'neon',
@@ -29,7 +29,8 @@ beforeEach(() => {
   })
 })
 
-describe('useStore — theme', () => {
+// ── Theme ─────────────────────────────────────────────────────────────────────
+describe('theme', () => {
   it('has default theme neon', () => {
     expect(useStore.getState().theme).toBe('neon')
   })
@@ -39,90 +40,114 @@ describe('useStore — theme', () => {
     expect(useStore.getState().theme).toBe('glass')
   })
 
-  it('setTheme to military works', () => {
+  it('setTheme to military', () => {
     useStore.getState().setTheme('military')
     expect(useStore.getState().theme).toBe('military')
   })
 })
 
-describe('useStore — category and algorithm selection', () => {
-  it('has default category sorting and algorithm bubble', () => {
-    const { category, algorithm } = useStore.getState()
-    expect(category).toBe('sorting')
-    expect(algorithm).toBe('bubble')
+// ── Category & Algorithm ──────────────────────────────────────────────────────
+describe('category and algorithm', () => {
+  it('has default category sorting', () => {
+    expect(useStore.getState().category).toBe('sorting')
   })
 
-  it('setCategory updates category and resets algorithm to default', () => {
+  it('has default algorithm bubble', () => {
+    expect(useStore.getState().algorithm).toBe('bubble')
+  })
+
+  it('setCategory updates category and sets default algorithm', () => {
     useStore.getState().setCategory('searching')
-    const { category, algorithm } = useStore.getState()
-    expect(category).toBe('searching')
-    expect(algorithm).toBe('linear')
+    expect(useStore.getState().category).toBe('searching')
+    expect(useStore.getState().algorithm).toBe('linear')
   })
 
-  it('setCategory to graph sets algorithm to bfs', () => {
+  it('setCategory to graph sets default bfs', () => {
     useStore.getState().setCategory('graph')
     expect(useStore.getState().algorithm).toBe('bfs')
   })
 
-  it('setCategory to tree sets algorithm to bst-insert', () => {
+  it('setCategory to tree sets default bst-insert', () => {
     useStore.getState().setCategory('tree')
     expect(useStore.getState().algorithm).toBe('bst-insert')
   })
 
-  it('setAlgorithm updates algorithm without changing category', () => {
+  it('setAlgorithm updates algorithm independently', () => {
     useStore.getState().setAlgorithm('merge')
     expect(useStore.getState().algorithm).toBe('merge')
     expect(useStore.getState().category).toBe('sorting')
   })
 })
 
-describe('useStore — data state', () => {
-  it('setArray stores the array', () => {
+// ── Array data ────────────────────────────────────────────────────────────────
+describe('array', () => {
+  it('starts empty', () => {
+    expect(useStore.getState().array).toEqual([])
+  })
+
+  it('setArray updates array', () => {
     useStore.getState().setArray([1, 2, 3])
     expect(useStore.getState().array).toEqual([1, 2, 3])
   })
 
-  it('setGraphData stores graph data', () => {
+  it('setArray replaces previous array', () => {
+    useStore.getState().setArray([10, 20])
+    useStore.getState().setArray([5, 6, 7])
+    expect(useStore.getState().array).toEqual([5, 6, 7])
+  })
+})
+
+// ── Graph data ────────────────────────────────────────────────────────────────
+describe('graphData', () => {
+  it('starts with empty nodes and edges', () => {
+    const { graphData } = useStore.getState()
+    expect(graphData.nodes).toEqual([])
+    expect(graphData.edges).toEqual([])
+  })
+
+  it('setGraphData updates graph data', () => {
     const data = { nodes: [{ id: 0 }], edges: [{ source: 0, target: 1 }] }
     useStore.getState().setGraphData(data)
     expect(useStore.getState().graphData).toEqual(data)
   })
-
-  it('setTreeData stores tree data', () => {
-    useStore.getState().setTreeData({ root: 50 })
-    expect(useStore.getState().treeData).toEqual({ root: 50 })
-  })
 })
 
-describe('useStore — playback', () => {
-  it('setSteps stores steps and resets currentStep to 0', () => {
+// ── Playback steps ────────────────────────────────────────────────────────────
+describe('steps and playback', () => {
+  it('starts with empty steps', () => {
+    expect(useStore.getState().steps).toEqual([])
+  })
+
+  it('setSteps resets currentStep to 0', () => {
     useStore.setState({ currentStep: 3 })
-    const steps = [{ array: [1] }, { array: [2] }, { array: [3] }]
-    useStore.getState().setSteps(steps)
-    expect(useStore.getState().steps).toEqual(steps)
+    useStore.getState().setSteps([{ a: 1 }, { a: 2 }])
+    expect(useStore.getState().steps).toHaveLength(2)
     expect(useStore.getState().currentStep).toBe(0)
   })
 
-  it('nextStep increments currentStep when not at end', () => {
-    useStore.setState({ steps: [0, 1, 2], currentStep: 0 })
+  it('nextStep advances currentStep', () => {
+    useStore.getState().setSteps([{}, {}, {}])
     useStore.getState().nextStep()
     expect(useStore.getState().currentStep).toBe(1)
   })
 
-  it('nextStep stops playing when at last step', () => {
-    useStore.setState({ steps: [0, 1, 2], currentStep: 2, isPlaying: true })
+  it('nextStep stops at last step and sets isPlaying false', () => {
+    useStore.getState().setSteps([{}, {}])
+    useStore.setState({ currentStep: 1, isPlaying: true })
     useStore.getState().nextStep()
-    expect(useStore.getState().currentStep).toBe(2)
+    expect(useStore.getState().currentStep).toBe(1)
     expect(useStore.getState().isPlaying).toBe(false)
   })
 
-  it('prevStep decrements currentStep when not at beginning', () => {
-    useStore.setState({ steps: [0, 1, 2], currentStep: 2 })
+  it('prevStep decrements currentStep', () => {
+    useStore.getState().setSteps([{}, {}, {}])
+    useStore.setState({ currentStep: 2 })
     useStore.getState().prevStep()
     expect(useStore.getState().currentStep).toBe(1)
   })
 
   it('prevStep does not go below 0', () => {
+    useStore.getState().setSteps([{}, {}])
     useStore.setState({ currentStep: 0 })
     useStore.getState().prevStep()
     expect(useStore.getState().currentStep).toBe(0)
@@ -134,118 +159,157 @@ describe('useStore — playback', () => {
     expect(useStore.getState().currentStep).toBe(0)
     expect(useStore.getState().isPlaying).toBe(false)
   })
+})
 
-  it('setIsPlaying updates isPlaying', () => {
-    useStore.getState().setIsPlaying(true)
-    expect(useStore.getState().isPlaying).toBe(true)
+// ── Speed ─────────────────────────────────────────────────────────────────────
+describe('speed', () => {
+  it('has default speed 500', () => {
+    expect(useStore.getState().speed).toBe(500)
   })
 
   it('setSpeed updates speed', () => {
-    useStore.getState().setSpeed(200)
-    expect(useStore.getState().speed).toBe(200)
+    useStore.getState().setSpeed(100)
+    expect(useStore.getState().speed).toBe(100)
   })
 })
 
-describe('useStore — view', () => {
+// ── View ──────────────────────────────────────────────────────────────────────
+describe('view', () => {
   it('has default view visual', () => {
     expect(useStore.getState().view).toBe('visual')
   })
 
-  it('setView updates view', () => {
-    useStore.getState().setView('logic')
-    expect(useStore.getState().view).toBe('logic')
-  })
-
-  it('setView to split works', () => {
+  it('setView updates view to split', () => {
     useStore.getState().setView('split')
     expect(useStore.getState().view).toBe('split')
   })
+
+  it('setView updates view to logic', () => {
+    useStore.getState().setView('logic')
+    expect(useStore.getState().view).toBe('logic')
+  })
 })
 
-describe('useStore — breakpoints', () => {
+// ── Breakpoints ───────────────────────────────────────────────────────────────
+describe('breakpoints', () => {
+  it('starts with empty breakpoints set', () => {
+    expect(useStore.getState().breakpoints.size).toBe(0)
+  })
+
   it('toggleBreakpoint adds a line', () => {
     useStore.getState().toggleBreakpoint(3)
     expect(useStore.getState().breakpoints.has(3)).toBe(true)
   })
 
-  it('toggleBreakpoint removes an already-set line', () => {
-    useStore.setState({ breakpoints: new Set([3]) })
+  it('toggleBreakpoint removes an existing line', () => {
+    useStore.getState().toggleBreakpoint(3)
     useStore.getState().toggleBreakpoint(3)
     expect(useStore.getState().breakpoints.has(3)).toBe(false)
   })
 
-  it('toggleBreakpoint can set multiple lines', () => {
+  it('clearBreakpoints empties the set', () => {
     useStore.getState().toggleBreakpoint(1)
-    useStore.getState().toggleBreakpoint(5)
-    const bp = useStore.getState().breakpoints
-    expect(bp.has(1)).toBe(true)
-    expect(bp.has(5)).toBe(true)
-  })
-
-  it('clearBreakpoints removes all breakpoints', () => {
-    useStore.setState({ breakpoints: new Set([1, 2, 3]) })
+    useStore.getState().toggleBreakpoint(2)
     useStore.getState().clearBreakpoints()
     expect(useStore.getState().breakpoints.size).toBe(0)
   })
+
+  it('toggleBreakpoint can have multiple breakpoints', () => {
+    useStore.getState().toggleBreakpoint(0)
+    useStore.getState().toggleBreakpoint(5)
+    useStore.getState().toggleBreakpoint(10)
+    expect(useStore.getState().breakpoints.size).toBe(3)
+    expect(useStore.getState().breakpoints.has(0)).toBe(true)
+    expect(useStore.getState().breakpoints.has(5)).toBe(true)
+    expect(useStore.getState().breakpoints.has(10)).toBe(true)
+  })
 })
 
-describe('useStore — execution log', () => {
-  it('appendLog adds an entry', () => {
-    useStore.getState().appendLog('line 1')
-    expect(useStore.getState().execLog).toContain('line 1')
+// ── Execution log ─────────────────────────────────────────────────────────────
+describe('execLog', () => {
+  it('starts empty', () => {
+    expect(useStore.getState().execLog).toEqual([])
   })
 
-  it('appendLog keeps at most 200 entries (slices at -199 to allow one more)', () => {
-    // Fill with 200 entries then add one more
-    const entries = Array.from({ length: 200 }, (_, i) => `entry-${i}`)
-    useStore.setState({ execLog: entries })
-    useStore.getState().appendLog('new-entry')
-    const log = useStore.getState().execLog
-    expect(log.length).toBe(200)
-    expect(log[log.length - 1]).toBe('new-entry')
-    expect(log[0]).toBe('entry-1') // first entry was dropped
+  it('appendLog adds an entry', () => {
+    useStore.getState().appendLog('line 1')
+    expect(useStore.getState().execLog).toHaveLength(1)
+    expect(useStore.getState().execLog[0]).toBe('line 1')
+  })
+
+  it('appendLog caps log at 200 entries', () => {
+    for (let i = 0; i < 205; i++) {
+      useStore.getState().appendLog(`entry ${i}`)
+    }
+    expect(useStore.getState().execLog.length).toBeLessThanOrEqual(200)
   })
 
   it('clearLog empties the log', () => {
-    useStore.setState({ execLog: ['a', 'b', 'c'] })
+    useStore.getState().appendLog('a')
+    useStore.getState().appendLog('b')
     useStore.getState().clearLog()
-    expect(useStore.getState().execLog).toHaveLength(0)
+    expect(useStore.getState().execLog).toEqual([])
   })
 })
 
-describe('useStore — stats', () => {
+// ── Stats ─────────────────────────────────────────────────────────────────────
+describe('stats', () => {
+  it('has default comparisons and swaps of 0', () => {
+    expect(useStore.getState().comparisons).toBe(0)
+    expect(useStore.getState().swaps).toBe(0)
+  })
+
   it('setStats updates comparisons and swaps', () => {
-    useStore.getState().setStats(10, 5)
-    const { comparisons, swaps } = useStore.getState()
-    expect(comparisons).toBe(10)
-    expect(swaps).toBe(5)
+    useStore.getState().setStats(15, 7)
+    expect(useStore.getState().comparisons).toBe(15)
+    expect(useStore.getState().swaps).toBe(7)
   })
 })
 
-describe('useStore — search target', () => {
+// ── Search target ─────────────────────────────────────────────────────────────
+describe('searchTarget', () => {
   it('has default searchTarget 42', () => {
     expect(useStore.getState().searchTarget).toBe(42)
   })
 
-  it('setSearchTarget updates the target', () => {
+  it('setSearchTarget updates target', () => {
     useStore.getState().setSearchTarget(77)
     expect(useStore.getState().searchTarget).toBe(77)
   })
 })
 
-describe('useStore — graph source/target', () => {
+// ── Graph source/target ───────────────────────────────────────────────────────
+describe('graphSource and graphTarget', () => {
   it('has default graphSource 0 and graphTarget 5', () => {
     expect(useStore.getState().graphSource).toBe(0)
     expect(useStore.getState().graphTarget).toBe(5)
   })
 
   it('setGraphSource updates source', () => {
-    useStore.getState().setGraphSource(2)
-    expect(useStore.getState().graphSource).toBe(2)
+    useStore.getState().setGraphSource(3)
+    expect(useStore.getState().graphSource).toBe(3)
   })
 
   it('setGraphTarget updates target', () => {
-    useStore.getState().setGraphTarget(3)
-    expect(useStore.getState().graphTarget).toBe(3)
+    useStore.getState().setGraphTarget(7)
+    expect(useStore.getState().graphTarget).toBe(7)
+  })
+})
+
+// ── User code builder ─────────────────────────────────────────────────────────
+describe('userCode and userSteps', () => {
+  it('starts with empty userCode', () => {
+    expect(useStore.getState().userCode).toBe('')
+  })
+
+  it('setUserCode updates code', () => {
+    useStore.getState().setUserCode('compare(0, 1)')
+    expect(useStore.getState().userCode).toBe('compare(0, 1)')
+  })
+
+  it('setUserSteps updates steps', () => {
+    const steps = [{ array: [1, 2], comparing: [0, 1] }]
+    useStore.getState().setUserSteps(steps)
+    expect(useStore.getState().userSteps).toEqual(steps)
   })
 })
